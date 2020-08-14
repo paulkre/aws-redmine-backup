@@ -1,5 +1,5 @@
 import { Client } from "ssh2";
-import { SshProps } from "./validate-props";
+import { SshProps } from "../props";
 
 function createSshClient({ key, host, user }: SshProps): Promise<Client> {
   const client = new Client();

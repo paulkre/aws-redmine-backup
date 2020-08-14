@@ -1,33 +1,50 @@
 import * as date from "date-and-time";
 import * as fs from "fs";
 
-import { validateSshProps } from "./ssh/validate-props";
+import { Props } from "./props";
 import { createSshShell } from "./ssh/shell";
 import { createSftpClient } from "./ssh/sftp";
 
-export async function createBackup(props: any) {
-  const sshProps = validateSshProps(props);
-  const shell = await createSshShell(sshProps);
-  const sftp = await createSftpClient(sshProps);
+async function downloadBackup(props: Props, filename: string) {
+  const sftp = await createSftpClient(props.ssh);
+  try {
+    await sftp.get(
+      filename,
+      fs.createWriteStream(`${props.tmpDir}/${filename}`)
+    );
+  } finally {
+    sftp.end();
+  }
+}
+
+export async function createBackup(props: Props) {
+  const shell = await createSshShell(props.ssh);
 
   try {
     await shell.run(
       'echo "[mysqldump]\nuser=root\npassword=$(cat bitnami_application_password)" >> /opt/bitnami/mysql/my.cnf'
     );
-    const filename = `backup_${date.format(new Date(), "YYYYMMDDHHmm")}.sql`;
-    await shell.run(`mysqldump bitnami_redmine > ${filename}`);
+
+    const tmpFilename = `backup_${date.format(new Date(), "YYMMDDHHmm")}.sql`;
+    await shell.run(`mysqldump bitnami_redmine > ${tmpFilename}`);
     await shell.run(
       'echo "$(head -n -3 /opt/bitnami/mysql/my.cnf)" > /opt/bitnami/mysql/my.cnf'
     );
-    await shell.run(`zip ${filename}.zip ${filename}`);
 
-    await sftp.get(`${filename}.zip`, fs.createWriteStream(`${filename}.zip`));
+    const filename = `${tmpFilename}.zip`;
+    await shell.run(`zip ${filename} ${tmpFilename}`);
 
-    await shell.run(`rm ${filename} ${filename}.zip`);
+    await downloadBackup(props, filename);
 
-    return "OK";
+    try {
+      await shell.run(`rm ${tmpFilename} ${filename}`);
+    } catch (err) {
+      fs.unlinkSync(filename);
+      throw err;
+    }
+
+    return filename;
   } finally {
     shell.close();
-    sftp.end();
   }
 }

@@ -18,6 +18,7 @@
     "@types/ssh2": "^0.5.44",
     "@types/ssh2-sftp-client": "^5.2.0",
     "archiver": "^5.0.0",
+    "aws-sdk": "^2.734.0",
     "dotenv": "^8.2.0",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",

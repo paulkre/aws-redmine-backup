@@ -1,5 +1,5 @@
 import * as Client from "ssh2-sftp-client";
-import { SshProps } from "./validate-props";
+import { SshProps } from "../props";
 
 export async function createSftpClient({
   key,
