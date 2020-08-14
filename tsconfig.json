@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "target": "es2017",
+    "outDir": "app/lib"
+  },
+  "compileOnSave": true,
+  "include": ["app/src"]
+}

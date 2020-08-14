@@ -1,0 +1,27 @@
+{
+  "name": "aws-redmine-backup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rimraf app/lib && tsc",
+    "dev": "ts-node app/src/dev-entry",
+    "archive": "node scripts/archive",
+    "package": "npm run build && npm run archive"
+  },
+  "keywords": [],
+  "author": "Paul Kretschel <paul.kretschel@icloud.com> (https://paulkre.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/archiver": "^3.1.0",
+    "@types/date-and-time": "^0.13.0",
+    "@types/ssh2": "^0.5.44",
+    "@types/ssh2-sftp-client": "^5.2.0",
+    "archiver": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {}
+}

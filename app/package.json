@@ -1,0 +1,8 @@
+{
+  "main": "lib/index.js",
+  "dependencies": {
+    "date-and-time": "^0.14.0",
+    "ssh2": "^0.8.9",
+    "ssh2-sftp-client": "^5.2.2"
+  }
+}
