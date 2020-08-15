@@ -1,5 +1,5 @@
 import { sanitizeProps } from "./props";
-import { createBackup } from "./create-backup";
+import { createBackup } from "./backup";
 import { deleteExpiredBackups } from "./delete-expired-backups";
 
 export const handler = async (input: any) => {

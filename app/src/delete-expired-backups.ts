@@ -4,14 +4,13 @@ import { Props } from "./props";
 
 const maxNumBackups = 5;
 
-export async function deleteExpiredBackups(props: Props): Promise<string[]> {
+export async function deleteExpiredBackups({
+  s3Bucket,
+}: Props): Promise<string[]> {
   const s3 = new S3();
-  const { bucketName } = props.s3;
 
   const { Contents: allObjects } = await s3
-    .listObjects({
-      Bucket: bucketName,
-    })
+    .listObjects({ Bucket: s3Bucket })
     .promise();
 
   if (!allObjects || !allObjects.length) return [];
@@ -27,7 +26,7 @@ export async function deleteExpiredBackups(props: Props): Promise<string[]> {
 
   const { Deleted } = await s3
     .deleteObjects({
-      Bucket: bucketName,
+      Bucket: s3Bucket,
       Delete: {
         Objects: expiredObjects.map(({ Key }) => ({ Key: Key! })),
       },

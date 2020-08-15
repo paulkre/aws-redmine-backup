@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "esModuleInterop": true,
     "strict": true,
     "target": "es2017",
     "outDir": "app/lib"

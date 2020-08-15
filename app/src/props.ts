@@ -1,57 +1,47 @@
-export type SshProps = {
-  key: string;
-  host: string;
-  user: string;
-};
-
-export type S3Props = {
-  bucketName: string;
-};
-
-export type IamCredentials = {
-  accessKeyId: string;
-  accessKeySecret: string;
-};
+const { env } = process;
 
 export type Props = {
-  userDir?: string;
-  ssh: SshProps;
-  s3: S3Props;
-  iam: IamCredentials;
+  sshHost: string;
+  sshUser: string;
+  sshKey: string;
+
+  s3Bucket: string;
+
+  iamKeyId: string;
+  iamKeySecret: string;
 };
 
 const errorMessage = `The following structure is required: {
-  ssh: {
-    key: string;
-    host: string;
-    user: string;
-  };
-  s3: { bucketName: string };
-  iam: {
-    accessKeyId: string;
-    accessKeySecret: string;
-  };
+  sshHost: string;
+  sshUser: string;
+  sshKey: string;
+
+  s3Bucket: string;
+
+  iamKeyId: string;
+  iamKeySecret: string;
 }`;
 
-function validateSshProps(input?: Partial<SshProps>) {
-  if (!input || !input.key || !input.host || !input.user)
-    throw Error(`SSH config invalid: ${errorMessage}`);
-}
+export function sanitizeProps(input: Partial<Props>): Props {
+  if (!input) throw Error(errorMessage);
 
-function validateS3Props(input?: Partial<S3Props>) {
-  if (!input || !input.bucketName)
-    throw Error(`S3 config invalid: ${errorMessage}`);
-}
+  const props: Partial<Props> = {
+    sshHost: input.sshHost || env.SSH_HOST,
+    sshUser: input.sshUser || env.SSH_USER,
+    sshKey: input.sshKey || env.SSH_KEY,
 
-function validateIamProps(input?: Partial<IamCredentials>) {
-  if (!input || !input.accessKeyId || !input.accessKeySecret)
-    throw Error(`IAM config invalid: ${errorMessage}`);
-}
+    s3Bucket: input.s3Bucket || env.S3_BUCKET,
 
-export function sanitizeProps(input: any): Props {
-  validateSshProps(input.ssh);
-  validateS3Props(input.s3);
-  validateIamProps(input.iam);
+    iamKeyId: input.iamKeyId || env.IAM_KEY_ID,
+    iamKeySecret: input.iamKeySecret || env.IAM_KEY_SECRET,
+  };
 
-  return input;
+  if (!props.sshHost || !props.sshUser || !props.sshKey)
+    throw Error(`SSH configuration invalid: ${errorMessage}`);
+  if (!props.s3Bucket)
+    throw Error(`S3 bucket configuration invalid: ${errorMessage}`);
+  if (!props.iamKeyId || !props.iamKeySecret)
+    throw Error(`IAM user configuration invalid: ${errorMessage}`);
+
+  return props as Props;
 }
