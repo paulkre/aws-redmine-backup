@@ -1,17 +1,19 @@
-import * as fs from "fs";
-
 import { sanitizeProps } from "./props";
 import { createBackup } from "./create-backup";
-import { uploadBackup } from "./upload-backup";
+import { deleteExpiredBackups } from "./delete-expired-backups";
 
 export const handler = async (input: any) => {
   const props = sanitizeProps(input);
 
   const filename = await createBackup(props);
+  const deleted = await deleteExpiredBackups(props);
 
-  try {
-    return await uploadBackup(filename, props);
-  } finally {
-    fs.unlinkSync(`${props.tmpDir}/${filename}`);
-  }
+  const result = {
+    BackupCreated: filename,
+    ExpiredBackupsDeleted: deleted,
+  };
+
+  console.log(result);
+
+  return result;
 };

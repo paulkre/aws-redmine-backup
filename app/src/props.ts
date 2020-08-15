@@ -8,32 +8,50 @@ export type S3Props = {
   bucketName: string;
 };
 
+export type IamCredentials = {
+  accessKeyId: string;
+  accessKeySecret: string;
+};
+
 export type Props = {
-  tmpDir: string;
+  userDir?: string;
   ssh: SshProps;
   s3: S3Props;
+  iam: IamCredentials;
 };
+
+const errorMessage = `The following structure is required: {
+  ssh: {
+    key: string;
+    host: string;
+    user: string;
+  };
+  s3: { bucketName: string };
+  iam: {
+    accessKeyId: string;
+    accessKeySecret: string;
+  };
+}`;
 
 function validateSshProps(input?: Partial<SshProps>) {
   if (!input || !input.key || !input.host || !input.user)
-    throw Error(
-      "Function input invalid. The following structure is required: { host: string; user: string; key: string; }"
-    );
+    throw Error(`SSH config invalid: ${errorMessage}`);
 }
 
 function validateS3Props(input?: Partial<S3Props>) {
   if (!input || !input.bucketName)
-    throw Error(
-      "Function input invalid. The following structure is required: { bucketName: string; }"
-    );
+    throw Error(`S3 config invalid: ${errorMessage}`);
+}
+
+function validateIamProps(input?: Partial<IamCredentials>) {
+  if (!input || !input.accessKeyId || !input.accessKeySecret)
+    throw Error(`IAM config invalid: ${errorMessage}`);
 }
 
 export function sanitizeProps(input: any): Props {
   validateSshProps(input.ssh);
   validateS3Props(input.s3);
+  validateIamProps(input.iam);
 
-  return {
-    ...input,
-    tmpDir: input.tmpDir || "/tmp",
-  };
+  return input;
 }

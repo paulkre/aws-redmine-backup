@@ -4,7 +4,14 @@ import { handler } from ".";
 
 config();
 
-const { SSH_HOST, SSH_USER, SSH_KEY, S3_BUCKET_NAME } = process.env;
+const {
+  SSH_HOST,
+  SSH_USER,
+  SSH_KEY,
+  S3_BUCKET_NAME,
+  IAM_KEY_ID,
+  IAM_KEY_SECRET,
+} = process.env;
 
 const props: Props = {
   ssh: {
@@ -15,7 +22,11 @@ const props: Props = {
   s3: {
     bucketName: S3_BUCKET_NAME!,
   },
-  tmpDir: process.cwd(),
+  iam: {
+    accessKeyId: IAM_KEY_ID!,
+    accessKeySecret: IAM_KEY_SECRET!,
+  },
+  userDir: process.cwd(),
 };
 
 handler(props).then((res) => console.log(res));
