@@ -1,11 +1,11 @@
 import { NodeSSH } from "node-ssh";
-import { Props } from "./props";
+import { Config } from "./config";
 
 export async function createSSH({
   sshHost,
   sshUser,
   sshKey,
-}: Props): Promise<NodeSSH> {
+}: Config): Promise<NodeSSH> {
   const client = new NodeSSH();
 
   return client.connect({

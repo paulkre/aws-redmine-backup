@@ -1,11 +1,11 @@
 import * as date from "date-and-time";
 import { InstanceAccessDetails } from "aws-sdk/clients/lightsail";
 
-import { Props } from "./props";
+import { Config } from "./config";
 import { createSSH } from "./ssh";
 
-export async function createBackup(props: Props) {
-  const ssh = await createSSH(props);
+export async function createBackup(config: Config) {
+  const ssh = await createSSH(config);
 
   try {
     await ssh.execCommand(
@@ -23,13 +23,13 @@ export async function createBackup(props: Props) {
 
     try {
       await ssh.execCommand(
-        `aws configure set aws_access_key_id ${props.iamKeyId}`
+        `aws configure set aws_access_key_id ${config.iamKeyId}`
       );
       await ssh.execCommand(
-        `aws configure set aws_secret_access_key ${props.iamKeySecret}`
+        `aws configure set aws_secret_access_key ${config.iamKeySecret}`
       );
       await ssh.execCommand(
-        `aws s3api put-object --bucket ${props.s3Bucket} --key ${filename} --body ${filename}`
+        `aws s3api put-object --bucket ${config.s3Bucket} --key ${filename} --body ${filename}`
       );
     } finally {
       await ssh.execCommand(`rm ${tmpFilename} ${filename}`);

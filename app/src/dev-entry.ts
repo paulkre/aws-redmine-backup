@@ -3,4 +3,4 @@ import { handler } from ".";
 
 config();
 
-handler({});
+handler();

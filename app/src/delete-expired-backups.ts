@@ -1,12 +1,12 @@
 import { S3 } from "aws-sdk";
 
-import { Props } from "./props";
+import { Config } from "./config";
 
 const maxNumBackups = 5;
 
 export async function deleteExpiredBackups({
   s3Bucket,
-}: Props): Promise<string[]> {
+}: Config): Promise<string[]> {
   const s3 = new S3();
 
   const { Contents: allObjects } = await s3

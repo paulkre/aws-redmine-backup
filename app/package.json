@@ -3,7 +3,6 @@
   "dependencies": {
     "date-and-time": "^0.14.0",
     "file-type": "^14.7.1",
-    "node-ssh": "^11.0.0",
-    "sshpk": "^1.16.1"
+    "node-ssh": "^11.0.0"
   }
 }

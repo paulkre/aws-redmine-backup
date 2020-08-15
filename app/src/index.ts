@@ -1,9 +1,9 @@
-import { sanitizeProps } from "./props";
+import { getConfig } from "./config";
 import { createBackup } from "./backup";
 import { deleteExpiredBackups } from "./delete-expired-backups";
 
-export const handler = async (input: any) => {
-  const props = sanitizeProps(input);
+export const handler = async () => {
+  const props = await getConfig();
 
   const filename = await createBackup(props);
   const deleted = await deleteExpiredBackups(props);
