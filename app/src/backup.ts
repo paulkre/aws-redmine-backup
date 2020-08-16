@@ -1,5 +1,4 @@
 import * as date from "date-and-time";
-import { InstanceAccessDetails } from "aws-sdk/clients/lightsail";
 
 import { Config } from "./config";
 import { createSSH } from "./ssh";
@@ -37,6 +36,6 @@ export async function createBackup(config: Config) {
 
     return filename;
   } finally {
-    await ssh.dispose();
+    ssh.dispose();
   }
 }

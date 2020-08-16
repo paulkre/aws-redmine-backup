@@ -77,5 +77,5 @@ export async function getConfig(): Promise<Config> {
     iamKeySecret: env.IAM_KEY_SECRET!,
   };
 
-  return sanitizeConfig(await decryptVars(["sshKey"], config));
+  return sanitizeConfig(await decryptVars(["sshKey", "iamKeySecret"], config));
 }
